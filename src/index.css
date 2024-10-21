@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 229 44% 93%;
+        --foreground: 234 38% 5%;
+        --card: 229 44% 93%;
+        --card-foreground: 234 38% 5%;
+        --popover: 229 44% 93%;
+        --popover-foreground: 234 38% 5%;
+        --primary: 226 50% 28%;
+        --primary-foreground: 229 44% 93%;
+        --secondary: 226 54% 69%;
+        --secondary-foreground: 234 38% 5%;
+        --muted: 229 43% 20%;
+        --muted-foreground: 234 39% 70%;
+        --accent: 226 58% 41%;
+        --accent-foreground: 229 44% 93%;
+        --destructive: 0 85% 60%;
+        --destructive-foreground: 234 38% 5%;
+        --border: 229 43% 20%;
+        --input: 229 43% 20%;
+        --ring: 226 58% 40%;
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --background: 203 47% 7%;
+        --foreground: 204 42% 91%;
+        --card: 203 47% 7%;
+        --card-foreground: 204 42% 91%;
+        --popover: 203 47% 7%;
+        --popover-foreground: 204 42% 91%;
+        --primary: 204 51% 71%;
+        --primary-foreground: 203 47% 7%;
+        --secondary: 204 55% 30%;
+        --secondary-foreground: 204 42% 91%;
+        --muted: 203 47% 80%;
+        --muted-foreground: 204 42% 91%;
+        --accent: 205 58% 57%;
+        --accent-foreground: 203 47% 7%;
+        --destructive: 0 62% 30%;
+        --destructive-foreground: 203 41% 10%;
+        --border: 203 47% 60%;
+        --input: 203 47% 80%;
+        --ring: 205 58% 60%;
+    }
+}
+
+@layer components {
+    .card-content {
+        @apply flex flex-col justify-between w-full shadow-md hover:shadow-secondary cursor-pointer transition-all;
+    }
+}
