@@ -6,8 +6,10 @@ import { PaginationDashboard } from '@/components/shared/PaginationDashboard'
 import Search from '@/components/shared/Search'
 import TopicCard from '@/components/shared/TopicCard'
 import { Separator } from '@/components/ui/separator'
+import useGetCount from '@/hook/useGetCount'
 import useGetQuery from '@/hook/useGetQuery'
 import { EnumContentShow } from '@/types/ContentShow.enum'
+import { EnumCountGetObject } from '@/types/Count.enum'
 import { IError } from '@/types/Error.interface'
 import { EnumSort, ILesson, ILessonResponse } from '@/types/Lesson.interfaces'
 import { ITopic, ITopicResponse } from '@/types/Topic.interface'
@@ -24,6 +26,18 @@ const Dashboard = () => {
 
     const page = useGetQuery('page', '1')
 
+    const {
+        data: count,
+        isLoading: countIsLoading,
+        isError,
+    } = useGetCount<EnumContentShow>(
+        contentShow === EnumContentShow.TOPICS
+            ? EnumCountGetObject.topic
+            : EnumCountGetObject.lesson,
+        contentShow
+    )
+
+    // TODO: Do hook for this
     const { data: contentData, isLoading } = useQuery<
         ITopicResponse | ILessonResponse,
         IError,
@@ -49,9 +63,6 @@ const Dashboard = () => {
         select: ({ data }) => data,
     })
 
-    // TODO: Create loading component
-    if (isLoading || !contentData) return <div>Loading...</div>
-
     return (
         <>
             <Container>
@@ -62,20 +73,27 @@ const Dashboard = () => {
                         <ArrowDown size={28} />
                     </h1>
                     <Separator className="mb-5" />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {contentShow === EnumContentShow.TOPICS
-                            ? (contentData as ITopic[]).map((data) => (
-                                  <TopicCard key={data.id} {...data} />
-                              ))
-                            : (contentData as ILesson[]).map((data) => (
-                                  <LessonCard key={data.id} {...data} />
-                              ))}
-                    </div>
-                    <PaginationDashboard
-                        page={Number(page)}
-                        pageSize={20}
-                        totalCount={contentData.length}
-                    />
+                    {isLoading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {contentShow === EnumContentShow.TOPICS
+                                ? (contentData as ITopic[]).map((data) => (
+                                      <TopicCard key={data.id} {...data} />
+                                  ))
+                                : (contentData as ILesson[]).map((data) => (
+                                      <LessonCard key={data.id} {...data} />
+                                  ))}
+                        </div>
+                    )}
+                    {!countIsLoading && !isError && (
+                        <PaginationDashboard
+                            className="w-fit mx-auto mt-14"
+                            page={Number(page)}
+                            pageSize={20}
+                            totalCount={count as number}
+                        />
+                    )}
                 </div>
             </Container>
         </>

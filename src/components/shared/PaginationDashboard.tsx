@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import { useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface PaginationWithLinksProps {
     pageSizeSelectOptions?: {
@@ -25,6 +26,7 @@ interface PaginationWithLinksProps {
     pageSize: number
     page: number
     pageSearchParam?: string
+    className?: string
 }
 
 export function PaginationDashboard({
@@ -33,7 +35,9 @@ export function PaginationDashboard({
     totalCount,
     page,
     pageSearchParam,
+    className,
 }: PaginationWithLinksProps) {
+    const navigate = useNavigate()
     const totalPageCount = Math.ceil(totalCount / pageSize)
 
     const buildLink = useCallback(
@@ -46,16 +50,25 @@ export function PaginationDashboard({
         [pageSearchParam]
     )
 
+    const navigateToPage = useCallback(
+        (newPage: number) => {
+            const link = buildLink(newPage)
+            navigate(link, { replace: true }) // This will navigate without reloading the page
+        },
+        [navigate, buildLink]
+    )
+
     const navToPageSize = useCallback(
         (newPageSize: number) => {
             const key = pageSizeSelectOptions?.pageSizeSearchParam || 'pageSize'
             const searchParams = new URLSearchParams(window.location.search)
             searchParams.set(key, String(newPageSize))
-            window.location.href = `${
+            const link = `${
                 window.location.pathname
             }?${searchParams.toString()}`
+            navigate(link, { replace: true }) // Navigate without reloading the page
         },
-        [pageSizeSelectOptions]
+        [navigate, pageSizeSelectOptions]
     )
 
     const renderPageNumbers = () => {
@@ -67,7 +80,7 @@ export function PaginationDashboard({
                 items.push(
                     <PaginationItem key={i}>
                         <PaginationLink
-                            href={buildLink(i)}
+                            onClick={() => navigateToPage(i)}
                             isActive={page === i}
                         >
                             {i}
@@ -78,7 +91,10 @@ export function PaginationDashboard({
         } else {
             items.push(
                 <PaginationItem key={1}>
-                    <PaginationLink href={buildLink(1)} isActive={page === 1}>
+                    <PaginationLink
+                        onClick={() => navigateToPage(1)}
+                        isActive={page === 1}
+                    >
                         1
                     </PaginationLink>
                 </PaginationItem>
@@ -98,7 +114,7 @@ export function PaginationDashboard({
                 items.push(
                     <PaginationItem key={i}>
                         <PaginationLink
-                            href={buildLink(i)}
+                            onClick={() => navigateToPage(i)}
                             isActive={page === i}
                         >
                             {i}
@@ -118,7 +134,7 @@ export function PaginationDashboard({
             items.push(
                 <PaginationItem key={totalPageCount}>
                     <PaginationLink
-                        href={buildLink(totalPageCount)}
+                        onClick={() => navigateToPage(totalPageCount)}
                         isActive={page === totalPageCount}
                     >
                         {totalPageCount}
@@ -130,43 +146,51 @@ export function PaginationDashboard({
     }
 
     return (
-        <div className="flex flex-col md:flex-row items-center gap-3 w-full">
-            {pageSizeSelectOptions && (
-                <div className="flex flex-col gap-4 flex-1">
-                    <SelectRowsPerPage
-                        options={pageSizeSelectOptions.pageSizeOptions}
-                        setPageSize={navToPageSize}
-                        pageSize={pageSize}
-                    />
-                </div>
-            )}
-            <Pagination className="md:justify-end">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            href={buildLink(Math.max(page - 1, 1))}
-                            aria-disabled={page === 1}
-                            className={
-                                page === 1
-                                    ? 'pointer-events-none opacity-50'
-                                    : ''
-                            }
+        <div className={className}>
+            <div className="flex flex-col md:flex-row items-center gap-3 w-full">
+                {pageSizeSelectOptions && (
+                    <div className="flex flex-col gap-4 flex-1">
+                        <SelectRowsPerPage
+                            options={pageSizeSelectOptions.pageSizeOptions}
+                            setPageSize={navToPageSize}
+                            pageSize={pageSize}
                         />
-                    </PaginationItem>
-                    {renderPageNumbers()}
-                    <PaginationItem>
-                        <PaginationNext
-                            href={buildLink(Math.min(page + 1, totalPageCount))}
-                            aria-disabled={page === totalPageCount}
-                            className={
-                                page === totalPageCount
-                                    ? 'pointer-events-none opacity-50'
-                                    : ''
-                            }
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+                    </div>
+                )}
+                <Pagination className="md:justify-end">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                onClick={() =>
+                                    navigateToPage(Math.max(page - 1, 1))
+                                }
+                                aria-disabled={page === 1}
+                                className={
+                                    page === 1
+                                        ? 'pointer-events-none opacity-50'
+                                        : ''
+                                }
+                            />
+                        </PaginationItem>
+                        {renderPageNumbers()}
+                        <PaginationItem>
+                            <PaginationNext
+                                onClick={() =>
+                                    navigateToPage(
+                                        Math.min(page + 1, totalPageCount)
+                                    )
+                                }
+                                aria-disabled={page === totalPageCount}
+                                className={
+                                    page === totalPageCount
+                                        ? 'pointer-events-none opacity-50'
+                                        : ''
+                                }
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            </div>
         </div>
     )
 }
