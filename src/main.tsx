@@ -3,6 +3,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
+import { TooltipProvider } from './components/ui/tooltip'
 import './index.css'
 import { ThemeProvider } from './providers/ThemeProvider'
 
@@ -19,7 +20,9 @@ createRoot(document.getElementById('root')!).render(
         <ThemeProvider defaultTheme="system" storageKey="theme-mode">
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
-                    <App />
+                    <TooltipProvider>
+                        <App />
+                    </TooltipProvider>
                 </QueryClientProvider>
             </BrowserRouter>
         </ThemeProvider>

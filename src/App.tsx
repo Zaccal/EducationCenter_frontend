@@ -2,6 +2,8 @@ import { Toaster } from '@/components/ui/toaster'
 import { Route, Routes } from 'react-router-dom'
 import PrivateRouteForNotAuth from './hoc/PrivateRouteForNotAuth'
 import ProtectedRoute from './hoc/ProtectedRoute'
+import Layout from './pages/Layout'
+import PageError from './pages/PageError'
 import Register from './pages/Register'
 
 function App() {
@@ -15,6 +17,14 @@ function App() {
                         <PrivateRouteForNotAuth>
                             <Register />
                         </PrivateRouteForNotAuth>
+                    }
+                />
+                <Route
+                    path="*"
+                    element={
+                        <Layout>
+                            <PageError />
+                        </Layout>
                     }
                 />
             </Routes>

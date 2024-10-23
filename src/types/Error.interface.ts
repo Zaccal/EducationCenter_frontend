@@ -10,4 +10,5 @@ interface IResponse {
 export interface IError {
     response: IResponse
     status: number
+    message: string
 }
