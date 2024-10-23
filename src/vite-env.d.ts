@@ -7,3 +7,12 @@ interface ImportMetaEnv {
 interface ImportMeta {
     readonly env: ImportMetaEnv
 }
+
+declare namespace JSX {
+    interface IntrinsicElements {
+        'l-tailspin': React.DetailedHTMLProps<
+            React.HTMLAttributes<HTMLElement>,
+            HTMLElement
+        >
+    }
+}

@@ -14,6 +14,7 @@ import { IError } from '@/types/Error.interface'
 import { EnumSort, ILesson, ILessonResponse } from '@/types/Lesson.interfaces'
 import { ITopic, ITopicResponse } from '@/types/Topic.interface'
 import { useQuery } from '@tanstack/react-query'
+import 'ldrs/tailspin'
 import { ArrowDown } from 'lucide-react'
 
 const Dashboard = () => {
@@ -74,7 +75,9 @@ const Dashboard = () => {
                     </h1>
                     <Separator className="mb-5" />
                     {isLoading ? (
-                        <div>Loading...</div>
+                        <div className="mx-auto w-fit my-[20%]">
+                            <l-tailspin></l-tailspin>
+                        </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {contentShow === EnumContentShow.TOPICS
