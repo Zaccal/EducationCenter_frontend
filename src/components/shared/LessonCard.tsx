@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from '../ui/card'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 type TypeLessonCard = Pick<ILesson, 'createdAt' | 'title' | 'questions' | 'id'>
 
@@ -16,9 +17,16 @@ const LessonCard = ({ questions, createdAt, title, id }: TypeLessonCard) => {
     return (
         <Card className="shadow-md card-content mb-6">
             <CardHeader>
-                <CardTitle className="text-[16px]">
-                    {truncateTextByWords(title, 6)}
-                </CardTitle>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <CardTitle className="text-[16px]">
+                            {truncateTextByWords(title, 6)}
+                        </CardTitle>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>{truncateTextByWords(title, 18)}</p>
+                    </TooltipContent>
+                </Tooltip>
                 <CardDescription>
                     {dayjs(createdAt).format('DD.MM.YYYY')}
                 </CardDescription>
