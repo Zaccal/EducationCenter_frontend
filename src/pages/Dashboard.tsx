@@ -13,6 +13,7 @@ import { ILesson } from '@/types/Lesson.interfaces'
 import { ITopic } from '@/types/Topic.interface'
 import 'ldrs/tailspin'
 import { ArrowDown } from 'lucide-react'
+import PageError from './PageError'
 
 const Dashboard = () => {
     const contentShow = useGetQuery<EnumContentShow>(
@@ -46,6 +47,12 @@ const Dashboard = () => {
                         <ArrowDown size={28} />
                     </h1>
                     <Separator className="mb-5" />
+                    {isError && (
+                        <PageError
+                            code={error?.status}
+                            message={error?.message}
+                        />
+                    )}
                     {isLoading ? (
                         <div className="mx-auto w-fit my-[20%]">
                             <l-tailspin></l-tailspin>
