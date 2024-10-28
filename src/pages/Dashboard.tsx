@@ -1,19 +1,16 @@
-import LessonService from '@/api/services/Lesson.service'
-import TopicService from '@/api/services/Topic.service'
 import Container from '@/components/shared/Container'
 import LessonCard from '@/components/shared/LessonCard'
 import { PaginationDashboard } from '@/components/shared/PaginationDashboard'
 import Search from '@/components/shared/Search'
 import TopicCard from '@/components/shared/TopicCard'
 import { Separator } from '@/components/ui/separator'
+import useGetContentQuery from '@/hook/useGetContentQuery'
 import useGetCount from '@/hook/useGetCount'
 import useGetQuery from '@/hook/useGetQuery'
 import { EnumContentShow } from '@/types/ContentShow.enum'
 import { EnumCountGetObject } from '@/types/Count.enum'
-import { IError } from '@/types/Error.interface'
-import { EnumSort, ILesson, ILessonResponse } from '@/types/Lesson.interfaces'
-import { ITopic, ITopicResponse } from '@/types/Topic.interface'
-import { useQuery } from '@tanstack/react-query'
+import { ILesson } from '@/types/Lesson.interfaces'
+import { ITopic } from '@/types/Topic.interface'
 import 'ldrs/tailspin'
 import { ArrowDown } from 'lucide-react'
 
@@ -22,15 +19,12 @@ const Dashboard = () => {
         'content',
         EnumContentShow.TOPICS
     )
-    const sortTerm = useGetQuery<EnumSort>('sort', EnumSort.DEFUALT)
-    const searchTerm = useGetQuery('search', '')
-
     const page = useGetQuery('page', '1')
 
     const {
         data: count,
         isLoading: countIsLoading,
-        isError,
+        isError: countIsError,
     } = useGetCount<EnumContentShow>(
         contentShow === EnumContentShow.TOPICS
             ? EnumCountGetObject.topic
@@ -38,31 +32,7 @@ const Dashboard = () => {
         contentShow
     )
 
-    // TODO: Do hook for this
-    const { data: contentData, isLoading } = useQuery<
-        ITopicResponse | ILessonResponse,
-        IError,
-        ITopic[] | ILesson[]
-    >({
-        queryKey: ['topics', contentShow, searchTerm, sortTerm, page],
-        queryFn: async () => {
-            if (contentShow === EnumContentShow.TOPICS) {
-                return await TopicService.getTopics({
-                    searchTerm,
-                    sort: sortTerm,
-                    page: Number(page),
-                    perPage: 20,
-                })
-            }
-            return await LessonService.getAll({
-                searchTerm,
-                sort: sortTerm,
-                page: Number(page),
-                perPage: 20,
-            })
-        },
-        select: ({ data }) => data,
-    })
+    const { contentData, isLoading, error, isError } = useGetContentQuery()
 
     return (
         <>
@@ -70,7 +40,9 @@ const Dashboard = () => {
                 <Search />
                 <div className="my-20">
                     <h1 className="text-3xl font-bold flex items-center gap-3 mb-7">
-                        {contentShow}
+                        {contentShow === EnumContentShow.TOPICS
+                            ? 'Темы'
+                            : 'Уроки'}
                         <ArrowDown size={28} />
                     </h1>
                     <Separator className="mb-5" />
@@ -89,7 +61,7 @@ const Dashboard = () => {
                                   ))}
                         </div>
                     )}
-                    {!countIsLoading && !isError && (
+                    {!countIsLoading && !countIsError && (
                         <PaginationDashboard
                             className="w-fit mx-auto mt-14"
                             page={Number(page)}

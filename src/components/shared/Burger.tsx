@@ -18,7 +18,6 @@ const Burger = () => {
     const { data } = useAuth()
     const { logout } = useLogout()
 
-    // TODO: Exchange drawer on Sheet component
     return (
         <Drawer open={isOpen} onOpenChange={setOpen}>
             <DrawerTrigger className="min-[550px]:hidden block" asChild>
