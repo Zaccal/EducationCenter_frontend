@@ -5,6 +5,7 @@ import ProtectedRoute from './hoc/ProtectedRoute'
 import Layout from './pages/Layout'
 import PageError from './pages/PageError'
 import Register from './pages/Register'
+import Video from './pages/Video'
 
 function App() {
     return (
@@ -17,6 +18,15 @@ function App() {
                         <PrivateRouteForNotAuth>
                             <Register />
                         </PrivateRouteForNotAuth>
+                    }
+                />
+
+                <Route
+                    path="/video"
+                    element={
+                        <Layout>
+                            <Video />
+                        </Layout>
                     }
                 />
                 <Route
