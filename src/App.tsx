@@ -22,7 +22,7 @@ function App() {
                 />
 
                 <Route
-                    path="/video"
+                    path="/video/:topicId/:lessonId"
                     element={
                         <Layout>
                             <Video />

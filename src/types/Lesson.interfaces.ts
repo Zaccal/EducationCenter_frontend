@@ -27,6 +27,7 @@ export interface ILesson {
     description?: string
     userId: number
     questions: IQuestion[]
+    topicId: number
 }
 
 export interface ILessonCreate {

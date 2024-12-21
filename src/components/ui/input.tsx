@@ -3,12 +3,25 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { LucideProps } from 'lucide-react'
 
+type TypeVariant = 'error' | 'defualt' | 'goust'
+
 export interface InputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     Icon?: React.ForwardRefExoticComponent<
         Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
     >
-    variant?: 'error' | 'defualt'
+    variant?: TypeVariant
+}
+
+const getVariantInputCSS = (variant: TypeVariant) => {
+    switch (variant) {
+        case 'error':
+            return 'bg-red-500 border-red-700 placeholder:text-red-300'
+        case 'goust':
+            return 'border-none bg-transparent pl-0'
+        default:
+            break
+    }
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -28,9 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     className={cn(
                         'h-10 w-full rounded-md border border-input bg-background px-6 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50',
                         Icon && 'px-10',
-                        variant === 'error'
-                            ? 'bg-red-500 border-red-700 placeholder:text-red-300'
-                            : ''
+                        getVariantInputCSS(variant)
                     )}
                     ref={ref}
                     {...props}

@@ -11,3 +11,7 @@ export interface ITopic {
 export interface ITopicResponse {
     data: ITopic[]
 }
+
+export interface ITopicResponseBy {
+    data: ITopic
+}

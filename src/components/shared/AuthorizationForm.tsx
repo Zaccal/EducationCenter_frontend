@@ -14,11 +14,13 @@ const AuthorizationForm = () => {
         handleSubmit,
         formState: { errors },
         reset,
+        clearErrors,
     } = useForm<ILogin>()
     const { login, error, isPending } = useLogin()
 
     const onSubmit: SubmitHandler<ILogin> = (data: ILogin) => {
         login(data)
+        clearErrors()
         reset()
     }
 

@@ -11,6 +11,10 @@ class TopicService {
             params: query,
         })
     }
+
+    async getTopicBy(id: string) {
+        return api.get(EnumTopicRoute.topics + id)
+    }
 }
 
 export default new TopicService()
